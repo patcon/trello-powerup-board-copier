@@ -1,5 +1,6 @@
 var Promise = TrelloPowerUp.Promise;
 var t = TrelloPowerUp.iframe();
+
 var accessRequired = function() {
 	return t.popup({
 			title: 'Authorize Board Copier',
@@ -13,6 +14,13 @@ var renderBoardButtonUsingPowerUpApi = function() {
 };
 
 var renderBoardButtonUsingTrelloAPI = function(token) {
+  return copyBoard(token)
+  .finally(function() {
+    t.closePopup();
+  });
+};
+
+var copyBoard = function(token) {
   return Promise.all([
     t.board('id', 'name'),
     t.member('username')
@@ -29,12 +37,10 @@ var renderBoardButtonUsingTrelloAPI = function(token) {
     };
     return Trello.post('boards', params, copySuccess, copyFailure)
     .then(function(newBoard) {
+      console.log(newBoard);
       return notifySlack(newBoard);
     });
   })
-  .finally(function() {
-    return t.closePopup();
-  });
 };
 
 var copySuccess = function(newBoard) {
@@ -65,7 +71,7 @@ var notifyFailure = function(res) {
 };
 
 t.render(function(){
-  	return Promise.all([
+  return Promise.all([
 			t.get('organization', 'private', 'authToken'),
 			t.get('board', 'private', 'authToken')
 	])
