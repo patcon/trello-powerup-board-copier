@@ -14,7 +14,7 @@ var renderBoardButtonUsingPowerUpApi = function() {
 };
 
 var renderBoardButtonUsingTrelloAPI = function(token) {
-  copyBoard(token)
+  return copyBoard(token)
   .then(notifySlack)
   .finally(function() {
     t.closePopup();
@@ -56,7 +56,7 @@ var notifySlack = function(newBoard) {
   };
   return $.ajax(opts)
   .then(notifySuccess)
-  .fail(notifyFailure);
+  .fail(notifyFailure)
 };
 
 var notifySuccess = function() {
