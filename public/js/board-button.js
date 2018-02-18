@@ -28,8 +28,9 @@ var renderBoardButtonUsingTrelloAPI = function(token) {
       'token': token
     };
     return Trello.post('boards', params, copySuccess, copyFailure)
-    .then(function(res) {
-      console.log(res);
+    .then(function(newBoard) {
+      console.log(newBoard.url);
+      return notifySlack(newBoard);
     });
   })
   .then(function() {
@@ -37,12 +38,31 @@ var renderBoardButtonUsingTrelloAPI = function(token) {
   });
 };
 
-var copySuccess = function(res) {
+var copySuccess = function(newBoard) {
   console.log('Successfully copied board.');
 };
 
 var copyFailure = function(res) {
   console.log('Failed copying board.');
+};
+
+var notifySlack = function(newBoard) {
+  var opts = {
+    url: 'https://hooks.slack.com/services/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',
+    type: 'post',
+    success: notifySuccess,
+    error: notifyFailure,
+    data: JSON.stringify({text: 'New onboarding initiated! '+newBoard.url })
+  }
+  return $.ajax(opts).promise();
+};
+
+var notifySuccess = function(res) {
+  console.log('Successfully notified Slack.');
+};
+
+var notifyFailure = function(res) {
+  console.log('Failed notifying Slack.');
 };
 
 var copyBoard = function(token) {
