@@ -14,7 +14,8 @@ var renderBoardButtonUsingPowerUpApi = function() {
 };
 
 var renderBoardButtonUsingTrelloAPI = function(token) {
-  return copyBoard(token)
+  copyBoard(token)
+  .then(notifySlack)
   .finally(function() {
     t.closePopup();
   });
@@ -35,11 +36,7 @@ var copyBoard = function(token) {
       'prefs_comments': 'public',
       'token': token
     };
-    return Trello.post('boards', params, copySuccess, copyFailure)
-    .then(function(newBoard) {
-      console.log(newBoard);
-      return notifySlack(newBoard);
-    });
+    return Trello.post('boards', params, copySuccess, copyFailure);
   })
 };
 
@@ -55,18 +52,18 @@ var notifySlack = function(newBoard) {
   var opts = {
     url: 'https://hooks.slack.com/services/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',
     type: 'post',
-    success: notifySuccess,
-    error: notifyFailure,
     data: JSON.stringify({text: 'New onboarding initiated! '+newBoard.url })
   };
-  return $.ajax(opts).promise();
+  return $.ajax(opts)
+  .then(notifySuccess)
+  .fail(notifyFailure);
 };
 
-var notifySuccess = function(res) {
+var notifySuccess = function() {
   console.log('Successfully notified Slack.');
 };
 
-var notifyFailure = function(res) {
+var notifyFailure = function() {
   console.log('Failed notifying Slack.');
 };
 
