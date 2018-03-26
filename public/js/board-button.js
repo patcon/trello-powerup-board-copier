@@ -66,7 +66,6 @@ var notifySlack = function(newBoard) {
     type: 'post',
     data: JSON.stringify({text: 'New onboarding initiated! '+newBoard.url })
   };
-  t.set('board', 'private', 'myBoardShortLink', newBoard.shortLink);
   return $.ajax(opts)
   .then(notifySuccess)
   .fail(notifyFailure);
