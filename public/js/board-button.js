@@ -1,10 +1,19 @@
-var Promise = TrelloPowerUp.Promise;
-var t = TrelloPowerUp.iframe();
+var Promise = window.TrelloPowerUp.Promise;
+var t = window.TrelloPowerUp.iframe();
 
 var accessRequired = function() {
 	return t.popup({
 			title: 'Authorize Board Copier',
 			url: 'auth.html',
+			height: 140,
+	});
+};
+
+var renderCopyComplete = function(newBoard) {
+	return t.popup({
+			title: 'Board Copied!',
+			url: 'copy-ready.html',
+      args: { newBoard: newBoard },
 			height: 140,
 	});
 };
@@ -15,10 +24,12 @@ var renderBoardButtonUsingPowerUpApi = function() {
 
 var renderBoardButtonUsingTrelloAPI = function(token) {
   return copyBoard(token)
-  .then(notifySlack)
-  .finally(function() {
-    t.closePopup();
-  });
+  .then(onCopyComplete);
+};
+
+var onCopyComplete = function(newBoard) {
+  notifySlack(newBoard);
+  renderCopyComplete(newBoard);
 };
 
 var copyBoard = function(token) {
@@ -34,6 +45,7 @@ var copyBoard = function(token) {
       'keepFromSource': 'cards',
       'prefs_permissionLevel': 'public',
       'prefs_comments': 'public',
+      'prefs_background': 'green',
       'token': token
     };
     return Trello.post('boards', params, copySuccess, copyFailure);
@@ -56,7 +68,7 @@ var notifySlack = function(newBoard) {
   };
   return $.ajax(opts)
   .then(notifySuccess)
-  .fail(notifyFailure)
+  .fail(notifyFailure);
 };
 
 var notifySuccess = function() {
