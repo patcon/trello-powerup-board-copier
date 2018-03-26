@@ -57,5 +57,5 @@ var copyBoard = function(t, opts) {
     'prefs_permissionLevel': 'public',
     'prefs_comments': 'public',
   };
-  Trello.post('boards', params, copySuccess, copyFailure);
+  window.Trello.post('boards', params, copySuccess, copyFailure);
 };
