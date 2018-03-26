@@ -9,27 +9,54 @@ var accessRequired = function() {
 	});
 };
 
-var renderCopyComplete = function(newBoard) {
-	return t.popup({
-			title: 'Board Copied!',
-			url: 'copy-ready.html',
-      args: { newBoard: newBoard },
-			height: 140,
-	});
+var renderCopyLink = function(boardData, type) {
+  if (type == 'new') {
+    return t.popup({
+        title: 'Board Copied!',
+        url: 'copy-link.html',
+        args: { newBoard: boardData },
+        height: 140,
+    });
+  } else if (type == 'existing') {
+    return t.popup({
+        title: 'Board Already Exists!',
+        url: 'copy-link.html',
+        args: { newBoard: boardData },
+        height: 140,
+    });
+  };
 };
 
 var renderBoardButtonUsingPowerUpApi = function() {
 	accessRequired();
 };
 
+var existingBoardId = function() {
+  return t.get('board', 'private', 'myBoardId', false);
+};
+
 var renderBoardButtonUsingTrelloAPI = function(token) {
-  return copyBoard(token)
-  .then(onCopyComplete);
+  return existingBoardId()
+    .then(function(myBoardId) {
+      console.log('existing board id: ' + myBoardId);
+      return myBoardId;
+    })
+    .then(function(myBoardId) {
+      if (myBoardId) {
+        window.Trello.boards.get(myBoardId)
+          .then(function(existingBoard) {
+            return renderCopyLink(existingBoard, 'existing');
+          });
+      } else {
+        return copyBoard(token)
+          .then(onCopyComplete);
+      };
+    });
 };
 
 var onCopyComplete = function(newBoard) {
   notifySlack(newBoard);
-  renderCopyComplete(newBoard);
+  renderCopyLink(newBoard, 'new');
 };
 
 var copyBoard = function(token) {
@@ -48,7 +75,7 @@ var copyBoard = function(token) {
       'prefs_background': 'green',
       'token': token
     };
-    return Trello.post('boards', params, copySuccess, copyFailure);
+    return window.Trello.post('boards', params, copySuccess, copyFailure);
   })
 };
 
