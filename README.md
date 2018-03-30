@@ -38,8 +38,8 @@ as a Custom Power-Up. These are added per-team on Trello.
       - on-enable
       - show-authorization
       - show-settings
-    - _Power-Up icon URL:_ https://cdn.glitch.com/7e09bb0f-ecb6-4ca0-9b86-b1a5f9fc76a9%2Fcopy-icon-black.png
-    - _Iframe connector URL:_ https://trello-powerup-board-copier.glitch.me/index.html
+    - _Power-Up icon URL:_ https://trello-powerup-board-copier.herokuapp.com/images/copy-icon-black.png
+    - _Iframe connector URL:_ https://trello-powerup-board-copier.herokuapp.com/index.html
     - _Support email:_ patrick.c.connolly@gmail.com
   - [ ] Click "Done".
 2. **Enable the power-up** on a team board.

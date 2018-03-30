@@ -1,7 +1,7 @@
 /* global TrelloPowerUp */
 
-var WHITE_COPY_ICON = 'https://cdn.glitch.com/7e09bb0f-ecb6-4ca0-9b86-b1a5f9fc76a9%2Fcopy-icon.png?1504977336303';
-var BLACK_COPY_ICON = 'https://cdn.glitch.com/7e09bb0f-ecb6-4ca0-9b86-b1a5f9fc76a9%2Fcopy-icon-black.png?1505000340238';
+var WHITE_COPY_ICON = './images/copy-icon.png';
+var BLACK_COPY_ICON = './images/copy-icon-black.png';
 
 var boardButtonCallback = function(t){
   return t.popup({
