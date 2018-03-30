@@ -9,27 +9,74 @@ var accessRequired = function() {
 	});
 };
 
-var renderCopyComplete = function(newBoard) {
-	return t.popup({
-			title: 'Board Copied!',
-			url: 'copy-ready.html',
-      args: { newBoard: newBoard },
-			height: 140,
-	});
+var renderCopyLink = function(boardData, type) {
+  if (type == 'new') {
+    return t.popup({
+        title: 'Board Copied!',
+        url: 'show-board.html',
+        args: {
+          boardData: boardData,
+          contextText: 'A copy of this template board has been created just for you!',
+          buttonText: 'Take me to my onboarding!',
+        },
+        height: 140,
+    });
+  } else if (type == 'existing') {
+    return t.popup({
+        title: 'Board Already Exists!',
+        url: 'show-board.html',
+        args: {
+          boardData: boardData,
+          contextText: 'A copy of this template board already exists!',
+          buttonText: 'Take me there!',
+        },
+        height: 140,
+    });
+  };
 };
 
 var renderBoardButtonUsingPowerUpApi = function() {
 	accessRequired();
 };
 
+var existingBoardId = function() {
+  return t.get('board', 'private', 'myBoardId', false);
+};
+
+var promiseRejected = function(rejected) {
+  console.log('Promise rejected: ' + rejected);
+};
+
 var renderBoardButtonUsingTrelloAPI = function(token) {
-  return copyBoard(token)
-  .then(onCopyComplete);
+  console.log('running renderBoardButtonUsingTrelloAPI...');
+  return existingBoardId()
+    .then(function(myBoardId) {
+      if (myBoardId) {
+        window.Trello.boards.get(myBoardId, null, function(existingBoard) {
+          // success
+          console.log("We're in success, and here's the arg: " + existingBoard);
+          console.log('board exists! '+JSON.stringify(existingBoard, null, 2));
+          return renderCopyLink(existingBoard, 'existing');
+        }, function(err) {
+          // error
+          console.log("We're in error: " + JSON.stringify(err, null, 2));
+          return copyBoard(token)
+            .then(onCopyComplete)
+            .catch(promiseRejected);
+        })
+      } else {
+        return copyBoard(token)
+          .then(onCopyComplete)
+          .catch(promiseRejected);
+      };
+    })
+    .catch(promiseRejected);
 };
 
 var onCopyComplete = function(newBoard) {
+  t.set('board', 'private', 'myBoardId', newBoard.id);
   notifySlack(newBoard);
-  renderCopyComplete(newBoard);
+  renderCopyLink(newBoard, 'new');
 };
 
 var copyBoard = function(token) {
@@ -48,7 +95,7 @@ var copyBoard = function(token) {
       'prefs_background': 'green',
       'token': token
     };
-    return Trello.post('boards', params, copySuccess, copyFailure);
+    return window.Trello.post('boards', params, copySuccess, copyFailure);
   })
 };
 
@@ -61,14 +108,21 @@ var copyFailure = function(res) {
 };
 
 var notifySlack = function(newBoard) {
-  var opts = {
-    url: 'https://hooks.slack.com/services/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',
-    type: 'post',
-    data: JSON.stringify({text: 'New onboarding initiated! '+newBoard.url })
-  };
-  return $.ajax(opts)
-  .then(notifySuccess)
-  .fail(notifyFailure);
+  return t.get('board', 'shared', 'slackHookUrl', null)
+  .then(function(slackHookUrl) {
+    if (slackHookUrl) {
+      var opts = {
+        url: 'https://hooks.slack.com/services/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',
+        type: 'post',
+        data: JSON.stringify({text: 'New onboarding initiated! '+newBoard.url })
+      };
+      return $.ajax(opts)
+      .then(notifySuccess)
+      .fail(notifyFailure);
+    } else {
+      console.log('WARN: slackHookUrl is not set in settings.');
+    };
+  });
 };
 
 var notifySuccess = function() {
@@ -93,7 +147,5 @@ t.render(function(){
 			return renderBoardButtonUsingPowerUpApi();
 		}
 	})
-	.then(function(){
-		return t.sizeTo('#content');
-  })
+  .catch(promiseRejected);
 });
