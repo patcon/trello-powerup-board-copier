@@ -9,7 +9,8 @@
     "board-buttons",
     "callback",
     "authorization-status",
-    "show-authorization"
+    "show-authorization",
+    "show-settings",
   ],
   "connectors": {
     "iframe": {

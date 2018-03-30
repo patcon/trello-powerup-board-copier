@@ -32,13 +32,22 @@ TrelloPowerUp.initialize({
     // when a user clicks the gear icon by your Power-Up in the Power-Ups menu
     // what should Trello show. We highly recommend the popup in this case as
     // it is the least disruptive, and fits in well with the rest of Trello's UX
-    return t.popup({
-      title: 'Board Copier Settings',
-      url: './settings.html',
-      height: 184 // we can always resize later
-    });
+    
+    if (t.getContext().permissions.board == 'write') {
+      return t.popup({
+        title: 'Board Copier Settings',
+        url: './settings.html',
+        height: 184 // we can always resize later
+      });
+    } else {
+     return t.popup({
+        title: 'Board Copier Settings',
+        url: './settings-denied.html',
+        height: 184 // we can always resize later
+      });
+    };
   },
-  
+    
   'show-authorization': function(t, options){
     return t.popup({
       title: 'Authorize Account',
@@ -54,19 +63,4 @@ var copySuccess = function() {
 
 var copyFailure = function() {
   console.log('Failed copying board.');
-};
-
-var copyBoard = function(t, opts) {
-  var templateBoardId, templateBoardName = t.board('id', 'name');
-  var username = t.member('id');
-  var newBoardName = username + "'s " + templateBoardName;
-  console.log(newBoardName);
-  var params = {
-    'name': newBoardName,
-    'idBoardSource': templateBoardId,
-    'keepFromSource': 'cards',
-    'prefs_permissionLevel': 'public',
-    'prefs_comments': 'public',
-  };
-  window.Trello.post('boards', params, copySuccess, copyFailure);
 };
