@@ -99,7 +99,8 @@ recommendations for setup. Please do submit your own!
 
 ## Contributing
 
-- TODO: Explain how Glitch is helpful for development
+- We auto-deploy the `master` branch to Heroku.
+- `#todo` Explain how Glitch is helpful for development
 
 ## License
 
