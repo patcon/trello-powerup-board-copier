@@ -85,7 +85,7 @@ var copyBoard = function(token) {
     t.member('username')
   ])
   .spread(function(templateBoard, user) {
-    var newBoardName = templateBoard.name.replace(/\s*\[template\]\s*/, '');
+    var newBoardName = templateBoard.name.replace(/\s*\[template\]\s*/i, '');
     newBoardName = `${user.username}'s ${newBoardName}`;
     var params = {
       'name': newBoardName,
