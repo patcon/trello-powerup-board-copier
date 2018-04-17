@@ -5,7 +5,8 @@ t.render(function() {
 })
 
 var appKey = '17ccd791431275b4c0afade4c83763bf';
-var returnUrl = encodeURIComponent('https://trello-powerup-board-copier.glitch.me/callback.html');
+var appUrl = 'https://trello-powerup-board-copier.herokuapp.com';
+var returnUrl = encodeURIComponent(`${appUrl}/callback.html`);
 var appName = encodeURIComponent('Board Copier Power-Up');
 var oauthUrl = 'https://trello.com/1/authorize?key='+appKey+
     '&name='+appName+
