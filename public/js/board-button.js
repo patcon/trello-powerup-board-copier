@@ -112,7 +112,7 @@ var notifySlack = function(newBoard) {
   .then(function(slackHookUrl) {
     if (slackHookUrl) {
       var opts = {
-        url: 'https://hooks.slack.com/services/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',
+        url: slackHookUrl,
         type: 'post',
         data: JSON.stringify({text: 'New onboarding initiated! '+newBoard.url })
       };
