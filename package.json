@@ -1,7 +1,7 @@
 {
-  "name": "trello-power-up-tutorial-part-3",
+  "name": "trello-power-board-copier",
   "version": "0.0.1",
-  "description": "A Power-Up to go along with the tutorial found at tech.trello.com",
+  "description": "Trello Power-Up to help make copying a board simple!",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
@@ -14,7 +14,7 @@
     "node": "7.10.x"
   },
   "repository": {
-    "url": "https://glitch.com/edit/#!/trello-power-up-tutorial-part-one"
+    "url": "https://github.com/patcon/trello-powerup-board-copier"
   },
   "license": "MIT"
 }
