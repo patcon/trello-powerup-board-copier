@@ -9,6 +9,13 @@ template Trello boards, particularly when used for onboarding.
 
 A **Trello Power-Up** is... `#todo`
 
+## Features
+
+* Single-button action to make a public copy of a template board.
+  * No deep menus or confusing settings to adjust!
+* Optionally notifies and links copied board from a Slack channel.
+  * Allows other contributors to know when onboarding has begun, and peek over shoulder to offer help and support.
+
 ## Usage
 
 ### Hosted
