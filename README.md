@@ -11,9 +11,9 @@ A **Trello Power-Up** is... `#todo`
 
 ## Features
 
-* Single-button action to make a public copy of a template board.
+* **Single-button action** to make a public copy of a template board.
   * No deep menus or confusing settings to adjust!
-* Optionally notifies and links copied board from a Slack channel.
+* Optionally **notifies Slack** with a link to the copied board.
   * Allows other contributors to know when onboarding has begun, and peek over shoulder to offer help and support.
 
 ## Usage
