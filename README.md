@@ -5,6 +5,8 @@ Trello Power-Up to help make copying a board simple!
 The intended use-case for this Power-Up is to streamline the usage of
 template Trello boards, particularly when used for onboarding.
 
+[Demo](https://trello.com/b/KBFG2MlX/edgi-developer-onboarding-demo)
+
 **Trello** is... `#todo`
 
 A **Trello Power-Up** is... `#todo`
